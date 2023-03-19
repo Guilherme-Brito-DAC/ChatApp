@@ -1,0 +1,167 @@
+﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+
+:root {
+    --primaria: #0a0e0f;
+    --secundaria: #161b1c;
+    --terciaria: #48a5c3;
+    --quarta: #202427;
+    --border: 2px solid #202427;
+}
+
+html, body {
+    font-family: 'Roboto', sans-serif;
+    background: var(--primaria);
+    color: white;
+}
+
+label {
+    font-size: 0.8rem;
+    color: white;
+}
+
+li {
+    margin-bottom: 1rem;
+}
+
+button {
+    outline: none;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: white;
+}
+
+.digitando {
+    color: var(--terciaria)
+}
+
+.main-content {
+    display: flex;
+    width: 100%
+}
+
+.apenas-icone {
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+    .apenas-icone:hover {
+        background-color: var(--terciaria);
+    }
+
+.menu {
+    background-color: var(--secundaria);
+    width: 120px;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-right: var(--border);
+}
+
+.chat-content {
+    display: flex;
+}
+
+.chat-container {
+    width: 100%;
+    height: 100vh;
+}
+
+.contatos-container {
+    background-color: var(--secundaria);
+    width: 500px;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    color: white;
+    border-right: var(--border);
+}
+
+.chat-header {
+    width: 100%;
+    background: var(--secundaria);
+    height: 6rem;
+    border-bottom: var(--border);
+}
+
+.chat-body {
+    height: calc(100vh - 11rem);
+}
+
+.chat-bottom {
+    background: var(--secundaria);
+    height: 5rem;
+    border-top: var(--border);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.contato-perfil {
+    width: 100%;
+    height: 6rem;
+    border-bottom: var(--border);
+    padding: 1rem;
+}
+
+.pessoas {
+    padding: 1rem;
+}
+
+input {
+    background: var(--quarta);
+    border: 0;
+    outline: 0;
+    padding: 0.7rem 1rem;
+    border-radius: 10px;
+    color: white;
+    width: 100%;
+}
+
+.active {
+    background: var(--terciaria);
+    color: white;
+    opacity: 1 !important;
+}
+
+.menu-item {
+    cursor: pointer;
+    opacity: 0.7;
+    display: flex;
+    transition: 0.5s;
+    justify-content: center;
+    margin: 0.5rem;
+    color: white;
+    text-decoration: none;
+    padding: 1rem;
+    border-radius: 50%;
+}
+
+    .menu-item span {
+        font-size: 35px;
+    }
+
+    .menu-item:hover {
+        opacity: 1;
+        color: white;
+    }
+
+
+.contato {
+    display: flex;
+    gap: 15px;
+}
+
+    .contato div {
+        margin: auto 0;
+    }
+
+    .contato img {
+        border-radius: 50%;
+        width: 4rem;
+    }

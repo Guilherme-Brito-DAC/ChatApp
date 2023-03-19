@@ -1,0 +1,82 @@
+﻿@page "/"
+
+<PageTitle>Chat</PageTitle>
+
+<div class="chat-content">
+    <div class="contatos-container">
+        <div class="contato-perfil">
+            <div class="contato">
+                <img src="../content/pizza.jpg" />
+                <div>
+                    <p style="font-size: 1.2rem">Guilherme</p>
+                    <label>Minha conta</label>
+                </div>
+            </div>
+        </div>
+        <div class="pessoas">
+            <div>
+                <input type="text" placeholder="Pesquisar..." />
+            </div>
+            <br />
+            <h2 style="font-size: 1.4rem;font-weight: 500;">
+                Mensagens
+            </h2>
+            <br />
+            <ul>
+                <li>
+                    <div class="contato">
+                        <img src="../content/dragao.jpg" />
+                        <div style="width:100%">
+                            <div style="width:100%;display:flex; justify-content:space-between">
+                                <p class="nome" style="font-size: 1.2rem">João</p>
+                                <label class="horario">12:30</label>
+                            </div>
+                            <div style="width:100%;display:flex; justify-content:space-between">
+                                <label>Eae mano, blz?</label>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="contato">
+                        <img src="../content/cachorro.jpg" />
+                        <div style="width:100%">
+                            <div style="width:100%;display:flex; justify-content:space-between">
+                                <p class="nome" style="font-size: 1.2rem">Gabriel</p>
+                                <label class="horario">12:30</label>
+                            </div>
+                            <div style="width:100%;display:flex; justify-content:space-between">
+                                <label class="digitando">Digitando...</label>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="chat-container">
+        <div class="chat-header">
+        </div>
+        <div class="chat-body">
+        </div>
+        <div class="chat-bottom">
+            <div>
+                <button class="apenas-icone">
+                    <span class="material-symbols-outlined">
+                        mood
+                    </span>
+                </button>
+            </div>
+            <div style="width: 85%;">
+                <input type="text" placeholder="Pesquisar..." />
+            </div>
+            <div>
+                <button class="apenas-icone">
+                    <span class="material-symbols-outlined">
+                        send
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
