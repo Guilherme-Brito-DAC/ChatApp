@@ -1,7 +1,9 @@
 ﻿@page "/perfil"
 
-<h3>Perfil</h3>
-
-@code {
-
-}
+<div class="perfil-content">
+    <img src="@Imagem" class="perfil-image" />
+     <br />       
+    <input type="text" @bind-value="@Nome" />
+     <br />       
+    <button @onclick="Editar">Editar</button>
+</div>

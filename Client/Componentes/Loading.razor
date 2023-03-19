@@ -1,0 +1,10 @@
+﻿
+
+<div class="lds-ellipsis" @(Carregando= =true ? "hidden" : "")><div></div><div></div><div></div><div></div></div>
+
+@code {
+
+    [Parameter]
+    public bool Carregando { get; set; }
+
+}

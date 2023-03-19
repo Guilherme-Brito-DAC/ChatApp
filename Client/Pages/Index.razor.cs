@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using ChatApp.Client.Componentes;
+using ChatApp.Client.Models;
+using ChatApp.Shared;
+using ChatApp.Shared.Constantes;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 
 namespace ChatApp.Client.Pages
@@ -13,36 +17,65 @@ namespace ChatApp.Client.Pages
         [Inject]
         NavigationManager? navigationManager { get; set; }
 
-        public async Task Conectar()
-        {
-            conexao = new HubConnectionBuilder()
-                .WithUrl(navigationManager.ToAbsoluteUri("/chathub"))
-                .Build();
+        [Inject]
+        Conexao? con { get; set; }
 
-            conexao.On<string, string>("MensagemRecebida", (usuario, mensagem) =>
+        [Inject]
+        Usuario? UsuarioAtual { get; set; }
+
+        public List<Contato> ContatosOnline = new List<Contato>()
+        {
+            new Contato()
             {
-                string msg = $"{(string.IsNullOrEmpty(usuario) ? "" : usuario + ": ")} {mensagem}";
-                Mensagens += msg + "\n";
-                StateHasChanged();
+                Nome = "João",
+                Imagem = "../content/cachorro.jpg",
+                Digitando = true,
+                UltimaMensagem = "Teste",
+                DataHora = DateTime.Now
+            }
+        };
+
+        protected override void OnInitialized()
+        {
+            con?.conexao?.On(TipoMensagem.Conexao.ToString(), (Mensagem mensagem) =>
+            {
+                Console.WriteLine(mensagem.UsuarioOrigem.Id);
+                Console.WriteLine(UsuarioAtual?.Id);
+                Console.WriteLine(mensagem.UsuarioOrigem.Nome);
+
+                if (mensagem.UsuarioOrigem.Id != UsuarioAtual?.Id && UsuarioAtual?.Id != Guid.Empty.ToString())
+                {
+                    ContatosOnline.Add(new Contato()
+                    {
+                        Nome = mensagem.UsuarioOrigem.Nome,
+                        Imagem = mensagem.UsuarioOrigem.Imagem,
+                        Digitando = false,
+                        UltimaMensagem = "Teste",
+                        DataHora = mensagem.DataHoraEnvio
+                    });
+
+                    StateHasChanged();
+                }
             });
 
-            await conexao.StartAsync();
-        }
+            con?.conexao?.On(TipoMensagem.Desconexao.ToString(), (Mensagem mensagem) =>
+            {
+                if (mensagem.UsuarioOrigem.Id != UsuarioAtual?.Id)
+                {
+                    ContatosOnline.Add(new Contato()
+                    {
+                        Nome = mensagem.UsuarioOrigem.Nome,
+                        Imagem = mensagem.UsuarioOrigem.Imagem,
+                        Digitando = false,
+                        UltimaMensagem = "Teste",
+                        DataHora = mensagem.DataHoraEnvio
+                    });
 
-        public async Task EnviarMensagem()
-        {
-            if (conexao == null) return;
+                    StateHasChanged();
+                }
+            });
 
-            await conexao.SendAsync("MensagemEnviada", Usuario, Mensagem);
-
-            Mensagem = String.Empty;
-        }
-
-        public async ValueTask Desconectar()
-        {
-            if (conexao == null) return;
-
-            await conexao.DisposeAsync();
+            base.OnInitialized();
         }
     }
 }

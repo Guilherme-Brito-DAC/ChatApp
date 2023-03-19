@@ -1,0 +1,38 @@
+﻿<div class="contato">
+    <img src="@Imagem" />
+    <div style="width:100%">
+        <div style="width:100%;display:flex; justify-content:space-between">
+            <p class="nome" style="font-size: 1.2rem">@Nome</p>
+            <label class="horario">@DataFormatada</label>
+        </div>
+        <div style="width:100%;display:flex; justify-content:space-between">
+            @if (Digitando.HasValue && Digitando.Value)
+            {
+                <label class="digitando">Digitando...</label>
+            }
+            else
+            {
+                <label>@UltimaMensagem</label>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Nome { get; set; }
+
+    [Parameter]
+    public string? Imagem { get; set; }
+
+    [Parameter]
+    public string? UltimaMensagem { get; set; }
+
+    [Parameter]
+    public bool? Digitando { get; set; }
+
+    [Parameter]
+    public DateTime? DataHora { get; set; }
+
+    public string DataFormatada { get; set; }
+}
