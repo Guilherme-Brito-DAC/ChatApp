@@ -6,14 +6,7 @@
             <label class="horario">@DataFormatada</label>
         </div>
         <div style="width:100%;display:flex; justify-content:space-between">
-            @if (Digitando.HasValue && Digitando.Value)
-            {
-                <label class="digitando">Digitando...</label>
-            }
-            else
-            {
-                <label>@UltimaMensagem</label>
-            }
+            <label class="digitando">Online</label>
         </div>
     </div>
 </div>
@@ -24,12 +17,6 @@
 
     [Parameter]
     public string? Imagem { get; set; }
-
-    [Parameter]
-    public string? UltimaMensagem { get; set; }
-
-    [Parameter]
-    public bool? Digitando { get; set; }
 
     [Parameter]
     public DateTime? DataHora { get; set; }

@@ -9,7 +9,7 @@ namespace ChatApp.Client.Models
     {
         public HubConnection? conexao;
 
-        public Conexao()
+        public Conexao(Usuario usuario)
         {
             conexao = new HubConnectionBuilder()
                 .WithUrl("https://localhost:7287/chathub")
@@ -19,13 +19,9 @@ namespace ChatApp.Client.Models
 
             Mensagem mensagem = new Mensagem()
             {
-                UsuarioOrigem = new Usuario()
-                {
-                    Id = "1",
-                    Nome = "Guilherme"
-                },
+                UsuarioOrigem = usuario,
                 DataHoraEnvio = DateTime.Now,
-                Texto = "Guilherme conectou"
+                Texto = $"{usuario.Nome} conectou"
             };
 
             EnviarMensagem(TipoMensagem.Conexao, mensagem);

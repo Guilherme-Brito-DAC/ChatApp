@@ -4,6 +4,7 @@ using ChatApp.Shared;
 using ChatApp.Shared.Constantes;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
+using System.Collections.Generic;
 
 namespace ChatApp.Client.Pages
 {
@@ -23,59 +24,47 @@ namespace ChatApp.Client.Pages
         [Inject]
         Usuario? UsuarioAtual { get; set; }
 
-        public List<Contato> ContatosOnline = new List<Contato>()
-        {
-            new Contato()
-            {
-                Nome = "João",
-                Imagem = "../content/cachorro.jpg",
-                Digitando = true,
-                UltimaMensagem = "Teste",
-                DataHora = DateTime.Now
-            }
-        };
+        public List<Contato> ContatosOnline = new List<Contato>();
 
         protected override void OnInitialized()
         {
-            con?.conexao?.On(TipoMensagem.Conexao.ToString(), (Mensagem mensagem) =>
+            con?.conexao?.On(TipoMensagem.Conexao.ToString(), (List<Usuario> usuarios) =>
             {
-                Console.WriteLine(mensagem.UsuarioOrigem.Id);
-                Console.WriteLine(UsuarioAtual?.Id);
-                Console.WriteLine(mensagem.UsuarioOrigem.Nome);
+                AtualizarListaDeContatos(usuarios.Where(u => u.Id != UsuarioAtual.Id).ToList());
 
-                if (mensagem.UsuarioOrigem.Id != UsuarioAtual?.Id && UsuarioAtual?.Id != Guid.Empty.ToString())
-                {
-                    ContatosOnline.Add(new Contato()
-                    {
-                        Nome = mensagem.UsuarioOrigem.Nome,
-                        Imagem = mensagem.UsuarioOrigem.Imagem,
-                        Digitando = false,
-                        UltimaMensagem = "Teste",
-                        DataHora = mensagem.DataHoraEnvio
-                    });
-
-                    StateHasChanged();
-                }
+                StateHasChanged();
             });
 
-            con?.conexao?.On(TipoMensagem.Desconexao.ToString(), (Mensagem mensagem) =>
+            con?.conexao?.On(TipoMensagem.Desconexao.ToString(), (List<Usuario> usuarios) =>
             {
-                if (mensagem.UsuarioOrigem.Id != UsuarioAtual?.Id)
-                {
-                    ContatosOnline.Add(new Contato()
-                    {
-                        Nome = mensagem.UsuarioOrigem.Nome,
-                        Imagem = mensagem.UsuarioOrigem.Imagem,
-                        Digitando = false,
-                        UltimaMensagem = "Teste",
-                        DataHora = mensagem.DataHoraEnvio
-                    });
+                AtualizarListaDeContatos(usuarios.Where(u => u.Id != UsuarioAtual.Id).ToList());
 
-                    StateHasChanged();
-                }
+                StateHasChanged();
+            });
+
+            con?.conexao?.On(TipoMensagem.AlteracaoDeUsuario.ToString(), (List<Usuario> usuarios) =>
+            {
+                AtualizarListaDeContatos(usuarios.Where(u => u.Id != UsuarioAtual.Id).ToList());
+
+                StateHasChanged();
             });
 
             base.OnInitialized();
+        }
+
+        private void AtualizarListaDeContatos(List<Usuario> usuarios)
+        {
+            ContatosOnline = new List<Contato>();
+
+            foreach (Usuario? usuario in usuarios)
+            {
+                ContatosOnline.Add(new Contato()
+                {
+                    Nome = usuario.Nome,
+                    Imagem = usuario.Imagem,
+                    DataHora = DateTime.Now
+                });
+            }
         }
     }
 }

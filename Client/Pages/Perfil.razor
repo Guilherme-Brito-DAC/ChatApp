@@ -1,9 +1,23 @@
 ﻿@page "/perfil"
 
 <div class="perfil-content">
-    <img src="@Imagem" class="perfil-image" />
-     <br />       
-    <input type="text" @bind-value="@Nome" />
-     <br />       
+    <div style="display: flex;">
+        <button @onclick="Anterior">
+            <span class="material-symbols-outlined">
+                arrow_back_ios
+            </span>
+        </button>
+
+        <img src="@Imagem" class="perfil-image" />
+
+        <button @onclick="Proxima">
+            <span class="material-symbols-outlined">
+                arrow_forward_ios
+            </span>
+        </button>
+    </div>
+    <br />
+    <input type="text" @bind-value="@Nome" maxlength="20" />
+    <br />
     <button @onclick="Editar">Editar</button>
 </div>
