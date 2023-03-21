@@ -32,6 +32,38 @@ button {
     color: white;
 }
 
+.botao-1 {
+    background-color: var(--terciaria);
+    border-radius: 8px;
+    border-style: none;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    height: 40px;
+    line-height: 20px;
+    list-style: none;
+    margin: 0;
+    outline: none;
+    padding: 10px 16px;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    transition: color 100ms;
+    vertical-align: baseline;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+    .botao-1:hover,
+    .botao-1:focus {
+        background-color: var(--terciaria);
+    }
+
 .digitando, .online {
     color: var(--terciaria)
 }
@@ -245,4 +277,26 @@ input {
 .perfil-image {
     border-radius: 50%;
     width: 20rem;
+}
+
+.selecionavel {
+    cursor: pointer;
+    border-radius: 10px;
+    padding: 0.5rem 0;
+    transition: 0.2s;
+}
+
+    .selecionavel:hover, .conversando {
+        background-color: var(--quarta);
+    }
+
+.notificacoes {
+    background: var(--terciaria);
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
 }

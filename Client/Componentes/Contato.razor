@@ -1,9 +1,12 @@
-﻿<div class="contato">
+﻿<div class="contato selecionavel @((Selecionado ? "conversando" : ""))" id="@Id">
     <img src="@Imagem" />
     <div style="width:100%">
         <div style="width:100%;display:flex; justify-content:space-between">
             <p class="nome" style="font-size: 1.2rem">@Nome</p>
-            <label class="horario">@DataFormatada</label>
+            @if (Notificacoes.HasValue && Notificacoes != 0)
+            {
+                <label class="notificacoes">@Notificacoes</label>
+            }
         </div>
         <div style="width:100%;display:flex; justify-content:space-between">
             <label class="digitando">Online</label>
@@ -13,13 +16,20 @@
 
 @code {
     [Parameter]
-    public string Nome { get; set; }
+    public string? Id { get; set; }
+
+    [Parameter]
+    public string? ConnectionId { get; set; }
+
+    [Parameter]
+    public string? Nome { get; set; }
 
     [Parameter]
     public string? Imagem { get; set; }
 
     [Parameter]
-    public DateTime? DataHora { get; set; }
+    public int? Notificacoes { get; set; }
 
-    public string DataFormatada { get; set; }
+    [Parameter]
+    public bool Selecionado { get; set; }
 }

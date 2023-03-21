@@ -11,6 +11,8 @@ namespace ChatApp.Server.Hubs
         #region Overrides
         public override async Task OnConnectedAsync()
         {
+            await EnviarMensagemParaMesmoUsuario(TipoMensagem.GetConnectionId, Context.ConnectionId);
+
             await base.OnConnectedAsync();
         }
 
@@ -18,7 +20,7 @@ namespace ChatApp.Server.Hubs
         {
             Usuarios = Usuarios.Where(u => u.ConnectionID != Context.ConnectionId).ToList();
 
-            await EnviarMensagem(TipoMensagem.Desconexao, Usuarios);
+            await EnviarMensagemParaTodos(TipoMensagem.Desconexao, Usuarios);
 
             await base.OnDisconnectedAsync(exception);
         }
@@ -30,12 +32,27 @@ namespace ChatApp.Server.Hubs
 
             Usuarios.Add(mensagem.UsuarioOrigem);
 
-            await EnviarMensagem(TipoMensagem.Conexao, Usuarios);
+            await EnviarMensagemParaTodos(TipoMensagem.Conexao, Usuarios);
         }
 
-        public async Task EnviarMensagem(TipoMensagem tipo, object mensagem)
+        public async Task Mensagem(Mensagem mensagem)
+        {
+            await Clients.Clients(mensagem.UsuarioOrigem.ConnectionID, mensagem.UsuarioDestino.ConnectionID).SendAsync(TipoMensagem.Mensagem.ToString(), mensagem);
+        }
+
+        public async Task EnviarMensagemParaTodos(TipoMensagem tipo, object mensagem)
         {
             await Clients.All.SendAsync(tipo.ToString(), mensagem);
+        }
+
+        public async Task EnviarMensagemParaMesmoUsuario(TipoMensagem tipo, object mensagem)
+        {
+            await Clients.Client(Context.ConnectionId).SendAsync(tipo.ToString(), mensagem);
+        }
+
+        public async Task UsuariosOnline(Mensagem mensagem)
+        {
+            await EnviarMensagemParaMesmoUsuario(TipoMensagem.UsuariosOnline, Usuarios);
         }
 
         public async Task AlteracaoDeUsuario(Mensagem mensagem)
@@ -50,7 +67,7 @@ namespace ChatApp.Server.Hubs
             if (index != -1)
                 Usuarios[index] = Usuario;
 
-            await EnviarMensagem(TipoMensagem.AlteracaoDeUsuario, Usuarios);
+            await EnviarMensagemParaTodos(TipoMensagem.AlteracaoDeUsuario, Usuarios);
         }
     }
 }

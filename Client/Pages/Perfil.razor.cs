@@ -53,7 +53,7 @@ namespace ChatApp.Client.Pages
 
         public void Proxima()
         {
-            if (NumeroImagem < Imagens.Length)
+            if (NumeroImagem < Imagens.Length - 1)
                 NumeroImagem++;
             else
                 NumeroImagem = 0;

@@ -4,16 +4,15 @@ using ChatApp.Shared;
 using ChatApp.Shared.Constantes;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
-using System.Collections.Generic;
 
 namespace ChatApp.Client.Pages
 {
     public partial class Index
     {
+        #region Parametros
         public HubConnection? conexao;
-        public string Mensagens = string.Empty;
-        public string Usuario = string.Empty;
-        public string Mensagem = string.Empty;
+        public List<Contato> ContatosOnline = new List<Contato>();
+        public List<Usuario> Usuarios = new List<Usuario>();
 
         [Inject]
         NavigationManager? navigationManager { get; set; }
@@ -23,13 +22,18 @@ namespace ChatApp.Client.Pages
 
         [Inject]
         Usuario? UsuarioAtual { get; set; }
+        #endregion
 
-        public List<Contato> ContatosOnline = new List<Contato>();
+        public string Id { get; set; }
+        public string Mensagem { get; set; }
+        public Usuario UsuarioConversando { get; set; }
 
         protected override void OnInitialized()
         {
             con?.conexao?.On(TipoMensagem.Conexao.ToString(), (List<Usuario> usuarios) =>
             {
+                Usuarios = usuarios;
+
                 AtualizarListaDeContatos(usuarios.Where(u => u.Id != UsuarioAtual.Id).ToList());
 
                 StateHasChanged();
@@ -37,6 +41,8 @@ namespace ChatApp.Client.Pages
 
             con?.conexao?.On(TipoMensagem.Desconexao.ToString(), (List<Usuario> usuarios) =>
             {
+                Usuarios = usuarios;
+
                 AtualizarListaDeContatos(usuarios.Where(u => u.Id != UsuarioAtual.Id).ToList());
 
                 StateHasChanged();
@@ -44,12 +50,44 @@ namespace ChatApp.Client.Pages
 
             con?.conexao?.On(TipoMensagem.AlteracaoDeUsuario.ToString(), (List<Usuario> usuarios) =>
             {
+                Usuarios = usuarios;
+
                 AtualizarListaDeContatos(usuarios.Where(u => u.Id != UsuarioAtual.Id).ToList());
 
                 StateHasChanged();
             });
 
+            con?.conexao?.On(TipoMensagem.UsuariosOnline.ToString(), (List<Usuario> usuarios) =>
+            {
+                Usuarios = usuarios;
+
+                AtualizarListaDeContatos(usuarios.Where(u => u.Id != UsuarioAtual.Id).ToList());
+
+                StateHasChanged();
+            });
+
+            con?.conexao?.On(TipoMensagem.Mensagem.ToString(), (Mensagem mensagem) =>
+            {
+                if (mensagem.UsuarioDestino.Id == UsuarioAtual.Id)
+                {
+                    AtualizarNotificacoes(mensagem.UsuarioOrigem);
+                }
+            });
+
+            con?.conexao?.On(TipoMensagem.GetConnectionId.ToString(), (string ConnectionId) =>
+            {
+                UsuarioAtual.ConnectionID = ConnectionId;
+            });
+
             base.OnInitialized();
+        }
+
+        protected override async Task OnAfterRenderAsync(bool primeiroRender)
+        {
+            if (primeiroRender)
+            {
+                await con?.EnviarMensagem(TipoMensagem.UsuariosOnline, null);
+            }
         }
 
         private void AtualizarListaDeContatos(List<Usuario> usuarios)
@@ -62,9 +100,57 @@ namespace ChatApp.Client.Pages
                 {
                     Nome = usuario.Nome,
                     Imagem = usuario.Imagem,
-                    DataHora = DateTime.Now
+                    Id = usuario.Id,
+                    ConnectionId = usuario.ConnectionID,
+                    Notificacoes = 0
                 });
             }
+        }
+
+        public void SelecionarConversa(string _Id)
+        {
+            Id = _Id;
+
+            UsuarioConversando = Usuarios.First(u => u.Id == _Id);
+
+            AtualizarNotificacoes(UsuarioConversando);
+
+            StateHasChanged();
+        }
+
+        public async Task EnviarMensagem()
+        {
+            if (string.IsNullOrEmpty(Mensagem))
+                return;
+
+            Mensagem mensagem = new Mensagem()
+            {
+                UsuarioOrigem = UsuarioAtual,
+                UsuarioDestino = UsuarioConversando,
+                DataHoraEnvio = DateTime.Now,
+                Texto = Mensagem,
+            };
+
+            await con?.EnviarMensagem(TipoMensagem.Mensagem, mensagem);
+
+            Mensagem = "";
+        }
+
+        private void AtualizarNotificacoes(Usuario usuario)
+        {
+            Contato Contato = ContatosOnline.Where(u => u.Id == usuario.Id).First();
+
+            int index = ContatosOnline.IndexOf(Contato);
+
+            if (Contato.Selecionado || Id == usuario.Id)
+                Contato.Notificacoes = 0;
+            else
+                Contato.Notificacoes = Contato.Notificacoes + 1;
+
+            if (index != -1)
+                ContatosOnline[index] = Contato;
+
+            StateHasChanged();
         }
     }
 }

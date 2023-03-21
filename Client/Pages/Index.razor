@@ -25,47 +25,55 @@
             <ul>
                 @foreach (var contato in ContatosOnline)
                 {
-                    <li>
-                        <Contato Nome="@contato.Nome" Imagem="@contato.Imagem" DataHora="@contato.DataHora" />
+                    <li @onclick="() => SelecionarConversa(contato.Id)">
+                        <Contato Selecionado="@(Id == contato.Id)" Id="@contato.Id" ConnectionId="@contato.ConnectionId" Nome="@contato.Nome" Imagem="@contato.Imagem" Notificacoes="@contato.Notificacoes" />
                     </li>
                 }
             </ul>
         </div>
     </div>
     <div class="chat-container">
-        <div class="chat-header">
-            <div class="contato">
-                <img src="../content/cachorro.jpg" />
-                <div style="width:100%">
-                    <div style="width:100%;display:flex; justify-content:space-between">
-                        <p class="nome" style="font-size: 1.2rem">João</p>
-                    </div>
-                    <div style="width:100%;display:flex; justify-content:space-between">
-                        <label class="digitando">Online</label>
+
+        @if (UsuarioConversando != null)
+        {
+            <div class="chat-header">
+                <div class="contato">
+                    <img src="@UsuarioConversando.Imagem" />
+                    <div style="width:100%">
+                        <div style="width:100%;display:flex; justify-content:space-between">
+                            <p class="nome" style="font-size: 1.2rem">@UsuarioConversando.Nome</p>
+                        </div>
+                        <div style="width:100%;display:flex; justify-content:space-between">
+                            <label class="digitando">Online</label>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="chat-body">
-        </div>
-        <div class="chat-bottom">
-            <div>
-                <button class="apenas-icone">
-                    <span class="material-symbols-outlined">
-                        mood
-                    </span>
-                </button>
+
+            <div class="chat-body">
             </div>
-            <div style="width: 90%;">
-                <input type="text" placeholder="Pesquisar..." />
-            </div>
-            <div>
-                <button class="apenas-icone">
-                    <span class="material-symbols-outlined">
-                        send
-                    </span>
-                </button>
-            </div>
-        </div>
+
+            <form @onsubmit="EnviarMensagem">
+                <div class="chat-bottom">
+                    <div>
+                        <button class="apenas-icone" type="button">
+                            <span class="material-symbols-outlined">
+                                mood
+                            </span>
+                        </button>
+                    </div>
+                    <div style="width: 90%;">
+                        <input type="text" placeholder="Pesquisar..." @bind-value="Mensagem" />
+                    </div>
+                    <div>
+                        <button class="apenas-icone" type="submit">
+                            <span class="material-symbols-outlined">
+                                send
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        }
     </div>
 </div>

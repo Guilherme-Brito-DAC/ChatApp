@@ -2,7 +2,7 @@
 
 <div class="perfil-content">
     <div style="display: flex;">
-        <button @onclick="Anterior">
+        <button @onclick="Anterior" type="button">
             <span class="material-symbols-outlined">
                 arrow_back_ios
             </span>
@@ -10,7 +10,7 @@
 
         <img src="@Imagem" class="perfil-image" />
 
-        <button @onclick="Proxima">
+        <button @onclick="Proxima" type="button">
             <span class="material-symbols-outlined">
                 arrow_forward_ios
             </span>
@@ -19,5 +19,6 @@
     <br />
     <input type="text" @bind-value="@Nome" maxlength="20" />
     <br />
-    <button @onclick="Editar">Editar</button>
+    <br />
+    <button @onclick="Editar" class="botao-1">Editar</button>
 </div>
