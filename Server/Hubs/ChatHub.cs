@@ -1,12 +1,16 @@
 ﻿using ChatApp.Shared;
 using ChatApp.Shared.Constantes;
 using Microsoft.AspNetCore.SignalR;
+using System;
+using System.Linq;
 
 namespace ChatApp.Server.Hubs
 {
     public class ChatHub : Hub
     {
         public static List<Usuario> Usuarios = new List<Usuario>();
+
+        public static List<Conversa> Conversas = new List<Conversa>();
 
         #region Overrides
         public override async Task OnConnectedAsync()
@@ -37,7 +41,30 @@ namespace ChatApp.Server.Hubs
 
         public async Task Mensagem(Mensagem mensagem)
         {
-            await Clients.Clients(mensagem.UsuarioOrigem.ConnectionID, mensagem.UsuarioDestino.ConnectionID).SendAsync(TipoMensagem.Mensagem.ToString(), mensagem);
+            Conversa Conversa = Conversas.FirstOrDefault(c => c.usuarios.Any(l => l.Id == mensagem.UsuarioOrigem.Id) && c.usuarios.Any(l => l.Id == mensagem.UsuarioDestino.Id));
+
+            if (Conversa == null)
+            {
+                Conversa = new Conversa();
+
+                Conversa.usuarios.Add(mensagem.UsuarioOrigem);
+                Conversa.usuarios.Add(mensagem.UsuarioDestino);
+
+                Conversa.mensagems.Add(mensagem);
+
+                Conversas.Add(Conversa);
+            }
+            else
+            {
+                Conversa.mensagems.Add(mensagem);
+
+                int index = Conversas.IndexOf(Conversa);
+
+                if (index != -1)
+                    Conversas[index] = Conversa;
+            }
+
+            await Clients.Clients(mensagem.UsuarioOrigem.ConnectionID, mensagem.UsuarioDestino.ConnectionID).SendAsync(TipoMensagem.Mensagem.ToString(), Conversa, mensagem);
         }
 
         public async Task EnviarMensagemParaTodos(TipoMensagem tipo, object mensagem)
@@ -53,6 +80,13 @@ namespace ChatApp.Server.Hubs
         public async Task UsuariosOnline(Mensagem mensagem)
         {
             await EnviarMensagemParaMesmoUsuario(TipoMensagem.UsuariosOnline, Usuarios);
+        }
+
+        public async Task ConversasOnline(Mensagem mensagem)
+        {
+            List<Conversa> conversas = Conversas.Where(c => c.usuarios.Any(l => l.ConnectionID == Context.ConnectionId)).ToList();
+
+            await EnviarMensagemParaMesmoUsuario(TipoMensagem.ConversasOnline, conversas);
         }
 
         public async Task AlteracaoDeUsuario(Mensagem mensagem)

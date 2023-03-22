@@ -7,6 +7,7 @@
         Mensagem,
         AlteracaoDeUsuario,
         UsuariosOnline,
+        ConversasOnline,
         Desconexao,
     }
 }

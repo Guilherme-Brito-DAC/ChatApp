@@ -4,16 +4,14 @@ using ChatApp.Shared;
 using ChatApp.Shared.Constantes;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
+using Newtonsoft.Json;
+using System;
 
 namespace ChatApp.Client.Pages
 {
     public partial class Index
     {
         #region Parametros
-        public HubConnection? conexao;
-        public List<Contato> ContatosOnline = new List<Contato>();
-        public List<Usuario> Usuarios = new List<Usuario>();
-
         [Inject]
         NavigationManager? navigationManager { get; set; }
 
@@ -24,9 +22,18 @@ namespace ChatApp.Client.Pages
         Usuario? UsuarioAtual { get; set; }
         #endregion
 
+        public HubConnection? conexao;
+
+        public List<Contato> ContatosOnline = new List<Contato>();
+
+        public List<Usuario> Usuarios = new List<Usuario>();
+
+        public List<Conversa> Conversas = new List<Conversa>();
+
         public string Id { get; set; }
         public string Mensagem { get; set; }
         public Usuario UsuarioConversando { get; set; }
+        public Conversa ConversaAtual { get; set; }
 
         protected override void OnInitialized()
         {
@@ -42,6 +49,18 @@ namespace ChatApp.Client.Pages
             con?.conexao?.On(TipoMensagem.Desconexao.ToString(), (List<Usuario> usuarios) =>
             {
                 Usuarios = usuarios;
+
+                if (Id == UsuarioAtual.Id)
+                {
+                    Id = "";
+                    UsuarioConversando = null;
+                }
+
+                if (UsuarioConversando != null && !usuarios.Any(u => u.Id == UsuarioConversando.Id))
+                {
+                    Id = "";
+                    UsuarioConversando = null;
+                }
 
                 AtualizarListaDeContatos(usuarios.Where(u => u.Id != UsuarioAtual.Id).ToList());
 
@@ -66,12 +85,23 @@ namespace ChatApp.Client.Pages
                 StateHasChanged();
             });
 
-            con?.conexao?.On(TipoMensagem.Mensagem.ToString(), (Mensagem mensagem) =>
+            con?.conexao?.On(TipoMensagem.ConversasOnline.ToString(), (List<Conversa> conversas) =>
             {
-                if (mensagem.UsuarioDestino.Id == UsuarioAtual.Id)
+                Conversas = conversas;
+
+                StateHasChanged();
+            });
+
+            con?.conexao?.On(TipoMensagem.Mensagem.ToString(), (Conversa conversa, Mensagem mensagem) =>
+            {
+                if (UsuarioConversando != null && conversa.usuarios.Any(u => u.Id == UsuarioConversando.Id))
                 {
-                    AtualizarNotificacoes(mensagem.UsuarioOrigem);
+                    ConversaAtual = conversa;
                 }
+
+                AtualizarConversa(conversa, mensagem);
+
+                StateHasChanged();
             });
 
             con?.conexao?.On(TipoMensagem.GetConnectionId.ToString(), (string ConnectionId) =>
@@ -87,6 +117,7 @@ namespace ChatApp.Client.Pages
             if (primeiroRender)
             {
                 await con?.EnviarMensagem(TipoMensagem.UsuariosOnline, null);
+                await con?.EnviarMensagem(TipoMensagem.ConversasOnline, null);
             }
         }
 
@@ -112,6 +143,17 @@ namespace ChatApp.Client.Pages
             Id = _Id;
 
             UsuarioConversando = Usuarios.First(u => u.Id == _Id);
+
+            Conversa conversa = Conversas.FirstOrDefault(c => c.usuarios.Any(u => u.Id == UsuarioConversando.Id));
+
+            if (conversa != null)
+            {
+                ConversaAtual = conversa;
+            }
+            else
+            {
+                ConversaAtual = null;
+            }
 
             AtualizarNotificacoes(UsuarioConversando);
 
@@ -151,6 +193,28 @@ namespace ChatApp.Client.Pages
                 ContatosOnline[index] = Contato;
 
             StateHasChanged();
+        }
+
+        public void Configuracoes()
+        {
+            navigationManager?.NavigateTo("perfil");
+        }
+
+        private void AtualizarConversa(Conversa conversa, Mensagem mensagem)
+        {
+            Conversa Conversa = Conversas.FirstOrDefault(c => c.usuarios.Any(l => l.Id == mensagem.UsuarioOrigem.Id) && c.usuarios.Any(l => l.Id == mensagem.UsuarioDestino.Id));
+
+            if (Conversa == null)
+            {
+                Conversas.Add(conversa);
+            }
+            else
+            {
+                int index = Conversas.IndexOf(Conversa);
+
+                if (index != -1)
+                    Conversas[index] = conversa;
+            }
         }
     }
 }

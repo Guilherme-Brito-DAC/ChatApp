@@ -6,11 +6,18 @@
     <div class="contatos-container">
         <div class="contato-perfil">
             <div class="contato">
-                <img src="@UsuarioAtual.Imagem" />
-                <div>
-                    <p style="font-size: 1.2rem">@UsuarioAtual.Nome</p>
-                    <label>Minha conta</label>
+                <div style="display: flex;justify-content: flex-start; align-items: center; gap: 11px;">
+                    <img src="@UsuarioAtual.Imagem" />
+                    <div>
+                        <p style="font-size: 1.2rem">@UsuarioAtual.Nome</p>
+                        <label class="digitando">Online</label>
+                    </div>
                 </div>
+                <button @onclick="Configuracoes" type="button" class="botao-apenas-icone">
+                    <span class="material-symbols-outlined">
+                        settings
+                    </span>
+                </button>
             </div>
         </div>
         <div class="pessoas">
@@ -51,6 +58,7 @@
             </div>
 
             <div class="chat-body">
+                <Chat Conversa="ConversaAtual" UsuarioAtual="UsuarioAtual" UsuarioConversando="UsuarioConversando" />
             </div>
 
             <form @onsubmit="EnviarMensagem">

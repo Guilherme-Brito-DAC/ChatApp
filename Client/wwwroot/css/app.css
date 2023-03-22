@@ -81,9 +81,10 @@ button {
     top: 0;
     color: white;
     display: flex;
-    justify-content: center;
     align-items: center;
     border-right: var(--border);
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .chat-content {
@@ -118,6 +119,7 @@ button {
     padding: 0;
     margin: 0;
     background-color: var(--primaria);
+    overflow-y: auto;
 }
 
 .chat-bottom {
@@ -127,6 +129,7 @@ button {
     display: flex;
     justify-content: space-around;
     align-items: center;
+    padding: 0 1rem;
 }
 
 .contato-perfil {
@@ -181,6 +184,7 @@ input {
 
 .contato {
     display: flex;
+    justify-content: space-between;
     gap: 15px;
 }
 
@@ -188,15 +192,18 @@ input {
         margin: auto 0;
     }
 
-        .contato div div {
-            margin-bottom: 0.2rem;
-        }
-
     .contato img {
         border-radius: 50%;
         width: 4rem;
     }
 
+.botao-apenas-icone {
+    border-radius: 50%;
+    border: 1px solid #4e5052;
+    width: 3rem;
+    height: 3rem;
+    margin: auto 0;
+}
 
 .lds-ellipsis {
     display: inline-block;
@@ -299,4 +306,27 @@ input {
     text-align: center;
     align-items: center;
     justify-content: center;
+}
+
+
+.mensagem {
+    width: 100%;
+    display: flex;
+    margin-bottom: 0.5rem;
+}
+
+.mensagem-do-usuario-atual {
+    background: var(--terciaria);
+    float: right;
+    color: white;
+    border-radius: 1rem 0rem 1rem 1rem;
+    padding: 1rem;
+}
+
+.mensagem-do-usuario-conversando {
+    background-color: var(--quarta);
+    padding: 1rem;
+    float: left;
+    color: white;
+    border-radius: 0rem 1rem 1rem 1rem;
 }

@@ -1,0 +1,33 @@
+﻿@using ChatApp.Shared
+
+<div style="padding:2rem">
+    @if (Conversa != null)
+    {
+        @foreach (Mensagem mensagem in Conversa.mensagems)
+        {
+            @if (mensagem.UsuarioOrigem.Id == UsuarioAtual.Id)
+            {
+                <div class="mensagem" style="justify-content:right">
+                    <p class="mensagem-do-usuario-atual">@mensagem.Texto</p>
+                </div>
+            }
+            else
+            {
+                <div class="mensagem" style="justify-content:left">
+                    <p class="mensagem-do-usuario-conversando">@mensagem.Texto</p>
+                </div>
+            }
+        }
+    }
+</div>
+
+@code {
+    [Parameter]
+    public Conversa Conversa { get; set; }
+
+    [Parameter]
+    public Usuario UsuarioAtual { get; set; }
+
+    [Parameter]
+    public Usuario UsuarioConversando { get; set; }
+}
