@@ -7,14 +7,18 @@
         {
             @if (mensagem.UsuarioOrigem.Id == UsuarioAtual.Id)
             {
-                <div class="mensagem" style="justify-content:right">
-                    <p class="mensagem-do-usuario-atual">@mensagem.Texto</p>
+                <div class="mensagem" style="float:right;justify-content:right">
+                    <div style="max-width: 30%;">
+                        <div class="mensagem-do-usuario-atual">@mensagem.Texto</div>
+                        <p class="data">@mensagem.DataHoraEnvio.ToString("HH:mm")</p>
+                    </div>
                 </div>
             }
             else
             {
-                <div class="mensagem" style="justify-content:left">
+                <div class="mensagem" style="justify-content:left;flex-direction: column;">
                     <p class="mensagem-do-usuario-conversando">@mensagem.Texto</p>
+                    <p class="data">@mensagem.DataHoraEnvio.ToString("HH:mm")</p>
                 </div>
             }
         }
