@@ -1,0 +1,15 @@
+﻿.menu {
+    background-color: var(--secundaria);
+    width: 120px;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    color: white;
+    display: flex;
+    align-items: center;
+    border-right: var(--border);
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: space-between;
+    padding: 1.5rem 0;
+}

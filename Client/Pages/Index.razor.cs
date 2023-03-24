@@ -32,9 +32,11 @@ namespace ChatApp.Client.Pages
 
         public string Id { get; set; }
         public string Mensagem { get; set; }
+        public string Pesquisa { get; set; }
         public Usuario UsuarioConversando { get; set; }
         public Conversa ConversaAtual { get; set; }
 
+        #region [Overrides]
         protected override void OnInitialized()
         {
             con?.conexao?.On(TipoMensagem.Conexao.ToString(), (List<Usuario> usuarios) =>
@@ -120,23 +122,7 @@ namespace ChatApp.Client.Pages
                 await con?.EnviarMensagem(TipoMensagem.ConversasOnline, null);
             }
         }
-
-        private void AtualizarListaDeContatos(List<Usuario> usuarios)
-        {
-            ContatosOnline = new List<Contato>();
-
-            foreach (Usuario? usuario in usuarios)
-            {
-                ContatosOnline.Add(new Contato()
-                {
-                    Nome = usuario.Nome,
-                    Imagem = usuario.Imagem,
-                    Id = usuario.Id,
-                    ConnectionId = usuario.ConnectionID,
-                    Notificacoes = 0
-                });
-            }
-        }
+        #endregion
 
         public void SelecionarConversa(string _Id)
         {
@@ -178,6 +164,29 @@ namespace ChatApp.Client.Pages
             Mensagem = "";
         }
 
+        public void Configuracoes()
+        {
+            navigationManager?.NavigateTo("perfil");
+        }
+
+        #region [Privados]
+        private void AtualizarConversa(Conversa conversa, Mensagem mensagem)
+        {
+            Conversa Conversa = Conversas.FirstOrDefault(c => c.usuarios.Any(l => l.Id == mensagem.UsuarioOrigem.Id) && c.usuarios.Any(l => l.Id == mensagem.UsuarioDestino.Id));
+
+            if (Conversa == null)
+            {
+                Conversas.Add(conversa);
+            }
+            else
+            {
+                int index = Conversas.IndexOf(Conversa);
+
+                if (index != -1)
+                    Conversas[index] = conversa;
+            }
+        }
+
         private void AtualizarNotificacoes(Usuario usuario)
         {
             Contato Contato = ContatosOnline.Where(u => u.Id == usuario.Id).First();
@@ -195,26 +204,22 @@ namespace ChatApp.Client.Pages
             StateHasChanged();
         }
 
-        public void Configuracoes()
+        private void AtualizarListaDeContatos(List<Usuario> usuarios)
         {
-            navigationManager?.NavigateTo("perfil");
-        }
+            ContatosOnline = new List<Contato>();
 
-        private void AtualizarConversa(Conversa conversa, Mensagem mensagem)
-        {
-            Conversa Conversa = Conversas.FirstOrDefault(c => c.usuarios.Any(l => l.Id == mensagem.UsuarioOrigem.Id) && c.usuarios.Any(l => l.Id == mensagem.UsuarioDestino.Id));
-
-            if (Conversa == null)
+            foreach (Usuario? usuario in usuarios)
             {
-                Conversas.Add(conversa);
-            }
-            else
-            {
-                int index = Conversas.IndexOf(Conversa);
-
-                if (index != -1)
-                    Conversas[index] = conversa;
+                ContatosOnline.Add(new Contato()
+                {
+                    Nome = usuario.Nome,
+                    Imagem = usuario.Imagem,
+                    Id = usuario.Id,
+                    ConnectionId = usuario.ConnectionID,
+                    Notificacoes = 0
+                });
             }
         }
+        #endregion
     }
 }

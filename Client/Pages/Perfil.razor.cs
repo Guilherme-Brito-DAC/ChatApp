@@ -74,6 +74,8 @@ namespace ChatApp.Client.Pages
             };
 
             Conexao.EnviarMensagem(TipoMensagem.AlteracaoDeUsuario, mensagem);
+
+            StateHasChanged();
         }
     }
 }

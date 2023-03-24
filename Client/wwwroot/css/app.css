@@ -7,11 +7,11 @@
     --terciaria: #48a5c3;
     --quarta: #202427;
     --border: 2px solid #202427;
+    --titulo: 1.2rem;
 }
 
 html, body {
     font-family: 'Roboto', sans-serif;
-    background: var(--primaria);
     color: white;
 }
 
@@ -64,6 +64,17 @@ button {
         background-color: var(--terciaria);
     }
 
+.selecionavel {
+    cursor: pointer;
+    border-radius: 10px;
+    padding: 0.5rem 0;
+    transition: 0.2s;
+}
+
+    .selecionavel:hover, .conversando {
+        background-color: var(--quarta);
+    }
+
 .digitando, .online {
     color: var(--terciaria)
 }
@@ -71,20 +82,6 @@ button {
 .main-content {
     display: flex;
     width: 100%
-}
-
-.menu {
-    background-color: var(--secundaria);
-    width: 120px;
-    height: 100vh;
-    position: sticky;
-    top: 0;
-    color: white;
-    display: flex;
-    align-items: center;
-    border-right: var(--border);
-    flex-wrap: wrap;
-    justify-content: center;
 }
 
 .chat-content {
@@ -95,6 +92,21 @@ button {
     width: 100%;
     height: 100vh;
 }
+
+.contato {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+    .contato div {
+        margin: auto 0;
+    }
+
+    .contato img {
+        border-radius: 50%;
+        width: 4rem;
+    }
 
 .contatos-container {
     background-color: var(--secundaria);
@@ -153,6 +165,25 @@ input {
     width: 100%;
 }
 
+.botao-apenas-icone {
+    border-radius: 50%;
+    border: 1px solid #4e5052;
+    width: 3rem;
+    height: 3rem;
+    margin: auto 0;
+}
+
+.notificacoes {
+    background: var(--terciaria);
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
 .active {
     background: var(--terciaria);
     color: white;
@@ -182,151 +213,25 @@ input {
     }
 
 
-.contato {
-    display: flex;
-    justify-content: space-between;
-    gap: 15px;
+.titulo {
+    font-size: 1.2rem
 }
 
-    .contato div {
-        margin: auto 0;
+@media only screen and (max-width: 600px) {
+    .titulo {
+        font-size: 0.9rem;
     }
 
-    .contato img {
-        border-radius: 50%;
-        width: 4rem;
+    .botao-apenas-icone {
+        width: 2.5rem;
+        height: 2.5rem;
     }
 
-.botao-apenas-icone {
-    border-radius: 50%;
-    border: 1px solid #4e5052;
-    width: 3rem;
-    height: 3rem;
-    margin: auto 0;
-}
-
-.lds-ellipsis {
-    display: inline-block;
-    position: relative;
-    width: 80px;
-    height: 80px;
-}
-
-    .lds-ellipsis div {
-        position: absolute;
-        top: 33px;
-        width: 13px;
-        height: 13px;
-        border-radius: 50%;
-        background: var(--terciaria);
-        animation-timing-function: cubic-bezier(0, 1, 1, 0);
-    }
-
-        .lds-ellipsis div:nth-child(1) {
-            left: 8px;
-            animation: lds-ellipsis1 0.6s infinite;
+        .botao-apenas-icone span {
+            font-size: 20px;
         }
 
-        .lds-ellipsis div:nth-child(2) {
-            left: 8px;
-            animation: lds-ellipsis2 0.6s infinite;
-        }
-
-        .lds-ellipsis div:nth-child(3) {
-            left: 32px;
-            animation: lds-ellipsis2 0.6s infinite;
-        }
-
-        .lds-ellipsis div:nth-child(4) {
-            left: 56px;
-            animation: lds-ellipsis3 0.6s infinite;
-        }
-
-@keyframes lds-ellipsis1 {
-    0% {
-        transform: scale(0);
+    input {
+        font-size: 0.8rem;
     }
-
-    100% {
-        transform: scale(1);
-    }
-}
-
-@keyframes lds-ellipsis3 {
-    0% {
-        transform: scale(1);
-    }
-
-    100% {
-        transform: scale(0);
-    }
-}
-
-@keyframes lds-ellipsis2 {
-    0% {
-        transform: translate(0, 0);
-    }
-
-    100% {
-        transform: translate(24px, 0);
-    }
-}
-
-.perfil-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-}
-
-.perfil-image {
-    border-radius: 50%;
-    width: 20rem;
-}
-
-.selecionavel {
-    cursor: pointer;
-    border-radius: 10px;
-    padding: 0.5rem 0;
-    transition: 0.2s;
-}
-
-    .selecionavel:hover, .conversando {
-        background-color: var(--quarta);
-    }
-
-.notificacoes {
-    background: var(--terciaria);
-    border-radius: 50%;
-    width: 2rem;
-    height: 2rem;
-    display: flex;
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-}
-
-
-.mensagem {
-    width: 100%;
-    display: flex;
-    margin-bottom: 0.5rem;
-}
-
-.mensagem-do-usuario-atual {
-    background: var(--terciaria);
-    float: right;
-    color: white;
-    border-radius: 1rem 0rem 1rem 1rem;
-    padding: 1rem;
-}
-
-.mensagem-do-usuario-conversando {
-    background-color: var(--quarta);
-    padding: 1rem;
-    float: left;
-    color: white;
-    border-radius: 0rem 1rem 1rem 1rem;
 }

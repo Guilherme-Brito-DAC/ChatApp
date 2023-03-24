@@ -1,0 +1,21 @@
+﻿.mensagem {
+    width: 100%;
+    display: flex;
+    margin-bottom: 0.5rem;
+}
+
+.mensagem-do-usuario-atual {
+    background: var(--terciaria);
+    float: right;
+    color: white;
+    border-radius: 1rem 0rem 1rem 1rem;
+    padding: 1rem;
+}
+
+.mensagem-do-usuario-conversando {
+    background-color: var(--quarta);
+    padding: 1rem;
+    float: left;
+    color: white;
+    border-radius: 0rem 1rem 1rem 1rem;
+}

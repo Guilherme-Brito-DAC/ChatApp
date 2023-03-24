@@ -9,7 +9,7 @@
                 <div style="display: flex;justify-content: flex-start; align-items: center; gap: 11px;">
                     <img src="@UsuarioAtual.Imagem" />
                     <div>
-                        <p style="font-size: 1.2rem">@UsuarioAtual.Nome</p>
+                        <p class="titulo">@UsuarioAtual.Nome</p>
                         <label class="digitando">Online</label>
                     </div>
                 </div>
@@ -22,19 +22,31 @@
         </div>
         <div class="pessoas">
             <div>
-                <input type="text" placeholder="Pesquisar..." />
+                <input type="text" placeholder="Pesquisar..." @bind="@Pesquisa" @oninput="@((e) => { Pesquisa=(string)e.Value;})" />
             </div>
             <br />
-            <h2 style="font-size: 1.4rem;font-weight: 500;">
+            <h2 class="titulo" style="font-weight: 500;">
                 Mensagens
             </h2>
             <br />
             <ul>
-                @foreach (var contato in ContatosOnline)
+                @if (string.IsNullOrEmpty(Pesquisa) && string.IsNullOrWhiteSpace(Pesquisa))
                 {
-                    <li @onclick="() => SelecionarConversa(contato.Id)">
-                        <Contato Selecionado="@(Id == contato.Id)" Id="@contato.Id" ConnectionId="@contato.ConnectionId" Nome="@contato.Nome" Imagem="@contato.Imagem" Notificacoes="@contato.Notificacoes" />
-                    </li>
+                    @foreach (var contato in ContatosOnline)
+                    {
+                        <li @onclick="() => SelecionarConversa(contato.Id)">
+                            <Contato Selecionado="@(Id == contato.Id)" Id="@contato.Id" ConnectionId="@contato.ConnectionId" Nome="@contato.Nome" Imagem="@contato.Imagem" Notificacoes="@contato.Notificacoes" />
+                        </li>
+                    }
+                }
+                else
+                {
+                    @foreach (var contato in ContatosOnline.Where(c => c.Nome.ToLower().Contains(Pesquisa.ToLower())))
+                    {
+                        <li @onclick="() => SelecionarConversa(contato.Id)">
+                            <Contato Selecionado="@(Id == contato.Id)" Id="@contato.Id" ConnectionId="@contato.ConnectionId" Nome="@contato.Nome" Imagem="@contato.Imagem" Notificacoes="@contato.Notificacoes" />
+                        </li>
+                    }
                 }
             </ul>
         </div>
