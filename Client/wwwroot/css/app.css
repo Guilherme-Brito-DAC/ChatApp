@@ -13,6 +13,7 @@
 html, body {
     font-family: 'Roboto', sans-serif;
     color: white;
+    background: var(--primaria)
 }
 
 label {
